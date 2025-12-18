@@ -11,6 +11,8 @@ import java.awt.*;
  */
 public class ExecutionMonitorDialog extends JDialog {
 
+    private static final long serialVersionUID = 1L;
+
     private JTextArea logArea;
     private JProgressBar progressBar;
     private JButton closeButton;

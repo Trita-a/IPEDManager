@@ -83,7 +83,7 @@ def create_jar():
     """Crea il JAR combinato con FlatLaf."""
     print("[3/4] Creazione JAR...")
     
-    combined_jar = "IPEDManager_combined.jar"
+    combined_jar = "IPEDManager.jar"
     
     # Estrai FlatLaf in temp
     temp_dir = "temp_combined"

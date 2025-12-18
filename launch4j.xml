@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>IPEDManager_combined.jar</jar>
+  <jar>IPEDManager.jar</jar>
   <outfile>IPEDManager.exe</outfile>
   <errTitle>IPEDManager</errTitle>
   <cmdLine></cmdLine>

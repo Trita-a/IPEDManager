@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class ProfileManagerDialog extends JDialog {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Color HEADER_BG = new Color(30, 58, 138); // Navy Blue (same as MainFrame)
     private static final Color TEXT_PRIMARY = new Color(15, 23, 42);
 
