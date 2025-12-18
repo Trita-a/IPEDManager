@@ -80,7 +80,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 </p>
 
 <p align="center">
-  <img src="assets/Screenshot_profili.png" alt="Profiles Manager" width="600">
+  <img src="assets/Screenshot_profili.png" alt="Profiles Manager" width="800">
   <br>
   <em>Profile Manager - save and load your analysis presets</em>
 </p>
