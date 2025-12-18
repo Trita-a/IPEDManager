@@ -1,9 +1,3 @@
-# IPEDManager
-
-# IPEDManager
-
-![IPEDManager Logo](resources/icons/ipedmanager_logo.png)
-
 **IPEDManager** is a modern, user-friendly graphical interface for [IPED (Digital Evidence Processor and Indexer)](https://github.com/sepinf-inc/IPED). It simplifies the configuration and execution of forensic analysis tasks, offering a professional dashboard with advanced profile management, real-time monitoring, and comprehensive configuration options.
 
 
