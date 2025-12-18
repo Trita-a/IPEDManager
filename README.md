@@ -16,7 +16,9 @@
 
 ## 🛠️ Prerequisites
 
-*   **Java Runtime Environment (JRE)**: Version 8 or higher (IPED typically bundles its own or requires a specific version).
+*   **Java Runtime Environment (JRE)**: Version 11 is required.
+    *   **Recommended**: [Liberica JDK 11 Full](https://github.com/bell-sw/Liberica/releases/download/11.0.29+12/bellsoft-jdk11.0.29+12-windows-amd64-full.msi) (includes JavaFX).
+    *   **Source**: [StealthPuppy AppTracker](https://stealthpuppy.com/apptracker/apps/b/bellsoftlibericajdk11/)
 *   **IPED**: You need to have IPED installed. IPEDManager acts as a frontend for it.
 
 ## 📦 Installation
