@@ -464,6 +464,25 @@ public class VectorIcons {
                 g2.fill(new Ellipse2D.Double(12 - 1.5, 19, 3, 3));
                 break;
 
+            case "alert":
+                // Triangle
+                drawPoly(g2, 12, 3, 3, 21, 21, 21, 12, 3);
+                // Exclamation
+                g2.draw(new Line2D.Double(12, 9, 12, 15));
+                g2.fill(new Ellipse2D.Double(12 - 1, 18, 2, 2));
+                break;
+
+            case "check":
+                // Checkmark
+                drawPoly(g2, 20, 6, 9, 17, 4, 12);
+                break;
+
+            case "x":
+                // Cross
+                g2.draw(new Line2D.Double(18, 6, 6, 18));
+                g2.draw(new Line2D.Double(6, 6, 18, 18));
+                break;
+
             default:
                 g2.draw(new Rectangle2D.Double(2, 2, 20, 20));
         }
