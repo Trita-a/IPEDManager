@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 # Paths
-IPED_JRE = r"c:\Users\Forensic_Dell\Desktop\nuova imo\Iped\IPED-releasee\iped-4.2.2\jre\bin\java.exe"
+IPED_JRE = "java" # Use system java
 ECJ_JAR = "tools/ecj_correct.jar"
 STUB_SIZE = 106496
 
@@ -137,44 +137,6 @@ def create_exe(jar_path):
     print(f"  EXE creato: {output_exe} ({size_mb:.2f} MB)")
     return output_exe
 
-def deploy_exe(exe_path):
-    """Copia l'EXE generato nella cartella di release."""
-    print("[5/5] Distribuzione...")
-    
-    deploy_dir = r"c:\Users\Forensic_Dell\Desktop\nuova imo\Iped\IPED-releasee\iped-4.2.2"
-    target_path = os.path.join(deploy_dir, "IPEDManager.exe")
-    
-    if not os.path.exists(deploy_dir):
-        print(f"ATTENZIONE: Cartella di destinazione non trovata: {deploy_dir}")
-        return
-        
-    try:
-        shutil.copy2(exe_path, target_path)
-        print(f"  Copiato in: {target_path}")
-        
-        # Copia anche lo script wrapper .bat
-        bat_file = "IPEDManager.bat"
-        if os.path.exists(bat_file):
-            shutil.copy2(bat_file, os.path.join(deploy_dir, bat_file))
-            print(f"  Copiato script wrapper: {bat_file}")
-    except Exception as e:
-        print(f"ERRORE durante la copia: {e}")
-
-def deploy_defaults():
-    """Copia la cartella defaults nella cartella di release."""
-    source_defaults = "defaults"
-    deploy_dir = r"c:\Users\Forensic_Dell\Desktop\nuova imo\Iped\IPED-releasee\iped-4.2.2"
-    target_defaults = os.path.join(deploy_dir, "defaults")
-
-    if not os.path.exists(source_defaults):
-        print("ATTENZIONE: Cartella defaults sorgente non trovata.")
-        return
-
-    print(f"  Aggiornamento defaults in: {target_defaults}")
-    if os.path.exists(target_defaults):
-        shutil.rmtree(target_defaults)
-    shutil.copytree(source_defaults, target_defaults)
-
 def main():
     print("=" * 50)
     print("  IPEDManager Build Script")
@@ -188,13 +150,14 @@ def main():
     copy_resources()
     jar = create_jar()
     exe = create_exe(jar)
-    deploy_exe(exe)
-    deploy_defaults()
     
     print()
     print("=" * 50)
     print("  BUILD E DISTRIBUZIONE COMPLETATI!")
-    print(f"  File locale: {exe}")
+    if exe:
+        print(f"  File locale: {exe}")
+    else:
+        print(f"  File locale: {jar}")
     print("=" * 50)
 
 if __name__ == "__main__":

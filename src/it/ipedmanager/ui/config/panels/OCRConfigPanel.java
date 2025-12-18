@@ -5,6 +5,10 @@ import it.ipedmanager.utils.BundleManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Pannello per configurazione OCR (OCRConfig.txt)
@@ -16,7 +20,8 @@ public class OCRConfigPanel extends BaseConfigPanel {
     private PropertiesConfigFile config;
 
     // Componenti
-    private JComboBox<String> cmbLanguage;
+    private JTextField txtLanguage;
+    private JButton btnSelectLanguage;
     private JSpinner spnMinSize;
     private JSpinner spnMaxSize;
     private JSpinner spnPdfResolution;
@@ -77,7 +82,12 @@ public class OCRConfigPanel extends BaseConfigPanel {
         gbc.anchor = GridBagConstraints.WEST;
 
         // Combo boxes
-        cmbLanguage = createStyledComboBox(LANGUAGES);
+        // cmbLanguage removed for multi-select support
+        txtLanguage = createStyledTextField();
+        txtLanguage.setEditable(false); // Editable only via dialog to ensure validity
+        btnSelectLanguage = createStyledButton("...");
+        btnSelectLanguage.addActionListener(e -> showLanguageSelectionDialog());
+
         cmbPdfLib = createStyledComboBox(PDF_LIBS);
 
         // Spinners
@@ -96,7 +106,14 @@ public class OCRConfigPanel extends BaseConfigPanel {
         grid.add(createStyledLabel(BundleManager.getString("panel.ocr.label.language")), gbc);
         gbc.gridx = 1;
         gbc.weightx = 0.15;
-        grid.add(cmbLanguage, gbc);
+
+        // Panel for Text + Button
+        JPanel langPanel = new JPanel(new BorderLayout(5, 0));
+        langPanel.setBackground(BG_COLOR);
+        langPanel.add(txtLanguage, BorderLayout.CENTER);
+        langPanel.add(btnSelectLanguage, BorderLayout.EAST);
+
+        grid.add(langPanel, gbc);
         gbc.gridx = 2;
         gbc.weightx = 0;
         grid.add(createStyledLabel(BundleManager.getString("panel.ocr.label.pdflib")), gbc);
@@ -251,7 +268,7 @@ public class OCRConfigPanel extends BaseConfigPanel {
         if (config == null || !config.isLoaded())
             return;
 
-        cmbLanguage.setSelectedItem(getOr(config.getString("OCRLanguage"), "eng"));
+        txtLanguage.setText(getOr(config.getString("OCRLanguage"), "eng"));
         chkSkipKnown.setSelected(config.getBoolean("skipKnownFiles", true));
         spnPageSegMode.setValue(config.getInt("pageSegMode", 1));
         spnMinSize.setValue(config.getInt("minFileSize2OCR", 1000));
@@ -270,7 +287,7 @@ public class OCRConfigPanel extends BaseConfigPanel {
         if (config == null)
             return;
 
-        config.setString("OCRLanguage", (String) cmbLanguage.getSelectedItem());
+        config.setString("OCRLanguage", txtLanguage.getText());
         config.setBoolean("skipKnownFiles", chkSkipKnown.isSelected());
         config.setInt("pageSegMode", (Integer) spnPageSegMode.getValue());
         config.setInt("minFileSize2OCR", (Integer) spnMinSize.getValue());
@@ -282,5 +299,44 @@ public class OCRConfigPanel extends BaseConfigPanel {
         config.setString("externalConvMaxMem", txtExternalMaxMem.getText());
         config.setBoolean("processNonStandard", chkProcessNonStandard.isSelected());
         config.setInt("maxConvImageSize", (Integer) spnMaxConvImageSize.getValue());
+    }
+
+    private void showLanguageSelectionDialog() {
+        // Parse current selection
+        String current = txtLanguage.getText();
+        List<String> selected = new ArrayList<>();
+        if (current != null && !current.isEmpty()) {
+            selected.addAll(Arrays.asList(current.split("\\+")));
+        }
+
+        // Header
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
+        panel.add(new JLabel(BundleManager.getString("panel.ocr.label.language")), BorderLayout.NORTH);
+
+        // Grid of checkboxes
+        JPanel checkPanel = new JPanel(new GridLayout(0, 3, 5, 5));
+        List<JCheckBox> boxes = new ArrayList<>();
+
+        for (String lang : LANGUAGES) {
+            JCheckBox chk = new JCheckBox(lang);
+            if (selected.contains(lang)) {
+                chk.setSelected(true);
+            }
+            boxes.add(chk);
+            checkPanel.add(chk);
+        }
+        panel.add(checkPanel, BorderLayout.CENTER);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, BundleManager.getString("panel.ocr.label.language"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String newSelection = boxes.stream()
+                    .filter(JCheckBox::isSelected)
+                    .map(JCheckBox::getText)
+                    .collect(Collectors.joining("+"));
+
+            txtLanguage.setText(newSelection);
+        }
     }
 }

@@ -34,7 +34,7 @@ To build IPEDManager from source, you need:
 
 *   **Python 3.x**: For the build script.
 *   **Java JDK**: To compile the Java code (ECJ is used in the script, ensure paths are correct).
-*   **Launch4j**: To create the Windows executable.
+*   **Launch4j**: Essential to create the Windows executable. [Tutorial and Download](https://github.com/fabnicolas/launch4j_exe_tutorial?tab=readme-ov-file).
 
 ### Build Steps
 

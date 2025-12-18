@@ -1,3 +1,2 @@
 Manifest-Version: 1.0
 Main-Class: it.ipedmanager.Main
-Class-Path: lib/flatlaf-3.2.5.jar
