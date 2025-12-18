@@ -87,15 +87,14 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         super("IPEDManager v" + Main.VERSION);
 
-        // Set App Icon
+        // Set App Icon (used for Taskbar and Task Switcher)
         try {
             // Load from classpath (inside JAR) or file system
             java.net.URL iconUrl = getClass().getResource("/icons/ipedmanager_logo.png");
             if (iconUrl != null) {
                 setIconImage(new ImageIcon(iconUrl).getImage());
             } else {
-                // Fallback if running from IDE and resources are not in classpath root but in
-                // resources folder
+                // Fallback if running from IDE
                 setIconImage(new ImageIcon("resources/icons/ipedmanager_logo.png").getImage());
             }
         } catch (Exception e) {

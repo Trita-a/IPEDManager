@@ -54,16 +54,11 @@ public class ProfileManagerDialog extends JDialog {
         menuBar.setOpaque(true);
         menuBar.setBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6));
 
-        // Simple user icon + title
-        JLabel logoLabel = new JLabel(new VectorIcon("user", 16, Color.WHITE));
-        logoLabel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 6));
+        JLabel titleLabel = new JLabel("Gestione Profili");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        titleLabel.setForeground(Color.WHITE);
 
-        JLabel title = new JLabel("Gestione Profili");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        title.setForeground(Color.WHITE);
-
-        menuBar.add(logoLabel);
-        menuBar.add(title);
+        menuBar.add(titleLabel);
 
         getRootPane().putClientProperty("JRootPane.menuBarEmbedded", true);
         setJMenuBar(menuBar);

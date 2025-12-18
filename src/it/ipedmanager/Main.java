@@ -73,7 +73,11 @@ public class Main {
 
         // Configura Look and Feel moderno - IntelliJ theme
         try {
+            FlatLightLaf.setup();
             JFrame.setDefaultLookAndFeelDecorated(true);
+            JDialog.setDefaultLookAndFeelDecorated(true);
+
+            UIManager.put("TitlePane.showIcon", false);
             UIManager.put("Button.arc", 10); // Standard rounded
             UIManager.put("Component.arc", 10);
             UIManager.put("TextComponent.arc", 8);

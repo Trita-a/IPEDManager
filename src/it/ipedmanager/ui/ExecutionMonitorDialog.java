@@ -1,6 +1,5 @@
 package it.ipedmanager.ui;
 
-import it.ipedmanager.ui.config.VectorIcon;
 import it.ipedmanager.utils.BundleManager;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -36,7 +35,6 @@ public class ExecutionMonitorDialog extends JDialog {
         JLabel title = new JLabel(BundleManager.getString("dialog.monitor.header"));
         title.setFont(new Font("Segoe UI", Font.BOLD, 16));
         title.setForeground(Color.WHITE);
-        title.setIcon(new VectorIcon("terminal", 24, Color.WHITE));
         title.setIconTextGap(12);
         header.add(title, BorderLayout.CENTER);
 

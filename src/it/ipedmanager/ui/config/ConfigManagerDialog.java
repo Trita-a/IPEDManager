@@ -154,24 +154,6 @@ public class ConfigManagerDialog extends JDialog {
         JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         content.setOpaque(false);
 
-        // Logo circle (compact - fits title bar height)
-        JPanel logoContainer = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(Color.WHITE);
-                g2.fillOval(0, 0, 22, 22); // Smaller circle
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        logoContainer.setOpaque(false);
-        logoContainer.setPreferredSize(new Dimension(22, 22));
-        logoContainer.setLayout(new GridBagLayout());
-        logoContainer.add(new JLabel(new VectorIcon("gears", 14, ACCENT))); // Smaller icon
-        content.add(logoContainer);
-
         // Title
         JLabel title = new JLabel(BundleManager.getString("header.title"));
         title.setFont(new Font("Segoe UI", Font.BOLD, 14));
