@@ -1,0 +1,76 @@
+# Categorie da esportare automaticamente
+# Rimuovi # per abilitare una categoria
+
+#######################################################################
+#Emails
+#Text Documents
+#PDF Documents
+#HTML Documents
+#RTF Documents
+#Other Documents
+#XML Files
+#Databases
+#Spreadsheets
+#Presentations
+#Contacts
+#Chats
+#Instant Messages
+#Internet History
+#Web Bookmarks
+#Link files
+#URL links
+#Peer-to-peer
+#Other Texts
+#Scanned Documents
+#Other Images
+#Georeferenced Files
+#User Activities
+#Windows Registry
+#Audios
+#Videos
+#Compressed Archives
+#OLE files
+#Mailboxes
+#Other files
+#Empty Files
+#ISO disks
+#Virtual disks
+#Other disks
+#Unallocated
+#File Slacks
+#Extraction Summary
+#Calls
+#SMS Messages
+#MMS Messages
+#Bluetooth Devices
+#SIM Data
+#Calendar
+#Logs
+#User Accounts
+#Searches
+#Notes
+#Wireless Networks
+#Notifications
+#Locations
+#Cookies
+#Passwords
+#Autofill
+#Cell Towers
+#Power Events
+#User Dictionaries
+#IP Connections
+#Recordings
+#Mobile Cards
+#Applications Usage
+#Device Information
+#Activities Sensor
+#Credit Cards
+#Device Connectivity
+#Device Events
+#File Downloads
+#File Uploads
+#Financial Accounts
+#Fuzzy Data
+#Journeys
+#Networks Usage
+#Recognized Devices

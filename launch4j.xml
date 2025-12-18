@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>IPEDManager_combined.jar</jar>
+  <outfile>IPEDManager.exe</outfile>
+  <errTitle>IPEDManager</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl></downloadUrl>
+  <supportUrl>https://github.com/Trita-a</supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest>IPEDManager.manifest</manifest>
+  <icon>resources/icons/ipedmanager.ico</icon>
+  <classPath>
+    <mainClass>it.ipedmanager.Main</mainClass>
+  </classPath>
+  <jre>
+    <path>jre;%IPED_HOME%/jre</path>
+    <bundledJre64Bit>true</bundledJre64Bit>
+    <bundledJreAsFallback>true</bundledJreAsFallback>
+    <minVersion>1.8.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64</runtimeBits>
+    <initialHeapSize>256</initialHeapSize>
+    <maxHeapSize>4096</maxHeapSize>
+    <opt>-Dfile.encoding=UTF-8</opt>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>1.0.0</txtFileVersion>
+    <fileDescription>IPEDManager - GUI per elaborazione evidenze IPED</fileDescription>
+    <copyright>William Tritapepe 2024</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>1.0.0</txtProductVersion>
+    <productName>IPEDManager</productName>
+    <companyName>William Tritapepe</companyName>
+    <internalName>IPEDManager</internalName>
+    <originalFilename>IPEDManager.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ITALIAN</language>
+  </versionInfo>
+</launch4jConfig>

@@ -1,0 +1,50 @@
+#############################################
+# HTML Report configuration
+#############################################
+
+# Case information may be loaded from .asap file (Brazilian Federal Police) informed by command line optionin (-asap). 
+# If not used -asap option, default values below will be used.
+Header = es. Polizia di Stato - Sez. Informatica
+RequestDate = es. 15/01/2024
+ReportDate = es. 28/02/2024
+RecordDate = es. 10/01/2024
+RequestDoc = es. Prot. N. 12345/2024
+Investigation = es. Proc. Penale N. 9876/24
+Report = es. REL-2024-0042
+Material = es. HDD Seagate 1TB S/N: WD-123
+ExaminerID = es. MB-2024-001
+Examiner = es. Dott. Marco Bianchi
+Record = es. REG-2024-0189
+Requester = es. Procura della Repubblica
+Title = es. Relazione Tecnica Analisi Forense
+
+# Items per HTML page.
+ItemsPerPage = 100
+
+# Inserts image thumbnails in report.
+EnableImageThumbs = true
+
+# Pixel size of image thumbnails, if enabled above.
+ThumbSize = 112
+
+# Inserts video thumbnails in report.
+# This option just inserts video thumbs in report, its creation must be enabled in processing options.
+EnableVideoThumbs = true
+
+# Total pixel width of video thumbs stripe, if enabled above
+VideoStripeWidth = 800
+
+# Number of frames per video thumbs stripe.
+FramesPerStripe = 8
+
+# Insert category section in left report frame.
+# If disabled, will be included only the bookmark section. If enabled, both will be included.
+# It should be disabled if bookmark names are very similar to category names.
+EnableCategoriesList = true
+
+# Enable HTML gallery of images in report.
+EnableThumbsGallery = true
+
+# Thumbnails per page in HTML gallery.
+ThumbsPerPage = 500
+

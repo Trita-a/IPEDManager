@@ -1,0 +1,42 @@
+# Build artifacts
+out/
+build/
+dist/
+*.class
+*.jar
+*.exe
+IPEDManager_combined.jar
+IPEDManager_v*.exe
+
+# Logs and debug output
+*.log
+build_log*.txt
+compile_log.txt
+compile_error.txt
+debug_output*.txt
+error_log.txt
+
+# Temp files
+*.tmp
+*.bak
+tmp/
+resources/keys_temp.properties
+resources/*_temp.properties
+
+# IDE specific settings
+.idea/
+.vscode/
+*.iml
+*.prefs
+.settings/
+.classpath
+.project
+
+# Python build script artifacts
+__pycache__/
+*.pyc
+
+# OS specific
+Thumbs.db
+Desktop.ini
+.DS_Store
