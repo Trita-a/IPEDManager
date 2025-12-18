@@ -1,28 +1,11 @@
 # IPEDManager
 
-![IPEDManager Cover](assets/cover.png)
+# IPEDManager
+
+![IPEDManager Logo](resources/icons/ipedmanager_logo.png)
 
 **IPEDManager** is a modern, user-friendly graphical interface for [IPED (Digital Evidence Processor and Indexer)](https://github.com/sepinf-inc/IPED). It simplifies the configuration and execution of forensic analysis tasks, offering a professional dashboard with advanced profile management, real-time monitoring, and comprehensive configuration options.
 
-## 📸 Gallery
-
-<p align="center">
-  <img src="assets/Screenshot_principale.png" alt="Main Dashboard" width="800">
-  <br>
-  <em>Main Dashboard - clean and intuitive interface</em>
-</p>
-
-<p align="center">
-  <img src="assets/Screenshot_settings.png" alt="Settings Panel" width="800">
-  <br>
-  <em>Advanced Configuration - easy-to-use toggles and settings</em>
-</p>
-
-<p align="center">
-  <img src="assets/Screenshot_profili.png" alt="Profiles Manager" width="600">
-  <br>
-  <em>Profile Manager - save and load your analysis presets</em>
-</p>
 
 ## 🚀 Key Features
 
@@ -84,3 +67,23 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 *Note: This tool is not affiliated with the official IPED project but serves as a community-developed enhancement.*
+
+## 📸 Gallery
+
+<p align="center">
+  <img src="assets/Screenshot_principale.png" alt="Main Dashboard" width="800">
+  <br>
+  <em>Main Dashboard - clean and intuitive interface</em>
+</p>
+
+<p align="center">
+  <img src="assets/Screenshot_settings.png" alt="Settings Panel" width="800">
+  <br>
+  <em>Advanced Configuration - easy-to-use toggles and settings</em>
+</p>
+
+<p align="center">
+  <img src="assets/Screenshot_profili.png" alt="Profiles Manager" width="600">
+  <br>
+  <em>Profile Manager - save and load your analysis presets</em>
+</p>
