@@ -1822,9 +1822,9 @@ public class MainFrame extends JFrame {
             String ver = ipedExecutor.getIpedVersion();
             String path = smartShortenPath(ipedExecutor.getIpedJarPath(), 35);
             if (!"Sconosciuta".equals(ver)) {
-                ipedPathLabel.setText("v" + ver + "  |  " + path);
+                ipedPathLabel.setText("<html><b style='color:#1e3a8a;'>IPED v" + ver + "</b> &nbsp;&nbsp; <font color='#6e737d'>" + path + "</font></html>");
             } else {
-                ipedPathLabel.setText(path);
+                ipedPathLabel.setText("<html><font color='#6e737d'>" + path + "</font></html>");
             }
         } else {
             ipedPathLabel.setText("Non configurato");
