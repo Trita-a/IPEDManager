@@ -5,6 +5,7 @@ import it.ipedmanager.config.PropertiesConfigFile;
 import it.ipedmanager.ui.components.OverlayPanel;
 import it.ipedmanager.ui.components.ToggleSwitch;
 import it.ipedmanager.ui.config.panels.*;
+import it.ipedmanager.ui.config.panels.RamDiskConfigPanel;
 
 import javax.swing.*;
 import it.ipedmanager.utils.BundleManager;
@@ -57,6 +58,7 @@ public class ConfigManagerDialog extends JDialog {
     private ElasticConfigPanel elasticConfigPanel;
     private MinIOConfigPanel minIOConfigPanel;
     private ExportConfigPanel exportConfigPanel;
+    private RamDiskConfigPanel ramDiskConfigPanel;
 
 
     // Menu items - Simplified Icons (Letters/Symbols that are safe)
@@ -90,7 +92,8 @@ public class ConfigManagerDialog extends JDialog {
                     "enableIndexToElasticSearch" },
             { "minio", "minio", "sidebar.minio", "sidebar.subtitle.minio", "sidebar.category.avanzato", "enableMinIO" },
             { "export", "export", "sidebar.export", "sidebar.subtitle.export", "sidebar.category.avanzato",
-                    "enableAutomaticExportFiles" }
+                    "enableAutomaticExportFiles" },
+            { "ramdisk", "chip", "sidebar.ramdisk", "sidebar.subtitle.ramdisk", "sidebar.category.avanzato", "virtual:ramdisk" }
     };
 
 
@@ -419,6 +422,8 @@ public class ConfigManagerDialog extends JDialog {
                 boolean img = configManager.getIPEDConfig().getBoolean("enableImageThumbs", false);
                 boolean vid = configManager.getIPEDConfig().getBoolean("enableVideoThumbs", false);
                 enabled = img || vid;
+            } else if ("virtual:ramdisk".equals(item.configKey)) {
+                enabled = it.ipedmanager.service.RamDiskService.getInstance().isAutoMode();
             } else {
                 enabled = configManager.getIPEDConfig().getBoolean(item.configKey, false);
             }
@@ -547,6 +552,8 @@ public class ConfigManagerDialog extends JDialog {
                 boolean img = configManager.getIPEDConfig().getBoolean("enableImageThumbs", false);
                 boolean vid = configManager.getIPEDConfig().getBoolean("enableVideoThumbs", false);
                 enabled = img || vid; // ON if at least one is enabled
+            } else if ("virtual:ramdisk".equals(item.configKey)) {
+                enabled = it.ipedmanager.service.RamDiskService.getInstance().isAutoMode();
             } else {
                 enabled = configManager.getIPEDConfig().getBoolean(item.configKey, false);
             }
@@ -560,6 +567,11 @@ public class ConfigManagerDialog extends JDialog {
                     // Also refresh panel UI if instance exists
                     if (mediaConfigPanel != null) {
                         mediaConfigPanel.loadConfig(); // Reloads these new values into UI
+                    }
+                } else if ("virtual:ramdisk".equals(item.configKey)) {
+                    it.ipedmanager.service.RamDiskService.getInstance().setAutoMode(selected);
+                    if (ramDiskConfigPanel != null) {
+                        ramDiskConfigPanel.loadConfig();
                     }
                 } else {
                     configManager.getIPEDConfig().setBoolean(item.configKey, selected);
@@ -629,6 +641,8 @@ public class ConfigManagerDialog extends JDialog {
         try {
             if (exportConfigPanel != null)
                 exportConfigPanel.saveConfig();
+            if (ramDiskConfigPanel != null)
+                ramDiskConfigPanel.saveConfig();
             if (localConfigPanel != null)
                 localConfigPanel.saveConfig();
             if (elasticConfigPanel != null)
@@ -810,12 +824,20 @@ public class ConfigManagerDialog extends JDialog {
                 "minio");
 
         exportConfigPanel = new ExportConfigPanel();
+        ramDiskConfigPanel = new RamDiskConfigPanel();
         contentPanel.add(
                 createWrappedPanel(BundleManager.getString("panel.export.title"),
                         BundleManager.getString("panel.export.description"),
                         exportConfigPanel,
                         "enableAutomaticExportFiles", "export"),
                 "export");
+
+        contentPanel.add(
+                createWrappedPanel(BundleManager.getString("panel.ramdisk.title"),
+                        BundleManager.getString("panel.ramdisk.description"),
+                        ramDiskConfigPanel,
+                        "virtual:ramdisk", "ramdisk"),
+                "ramdisk");
 
         // Populate search map
         panelsMap.put("ambiente", localConfigPanel);
@@ -832,6 +854,7 @@ public class ConfigManagerDialog extends JDialog {
         panelsMap.put("elastic", elasticConfigPanel);
         panelsMap.put("minio", minIOConfigPanel);
         panelsMap.put("export", exportConfigPanel);
+        panelsMap.put("ramdisk", ramDiskConfigPanel);
     }
 
     private JPanel wrapContent(String title, String description, JPanel panel) {
@@ -979,6 +1002,8 @@ public class ConfigManagerDialog extends JDialog {
             boolean img = configManager.getIPEDConfig().getBoolean("enableImageThumbs", false);
             boolean vid = configManager.getIPEDConfig().getBoolean("enableVideoThumbs", false);
             enabled = img || vid;
+        } else if ("virtual:ramdisk".equals(configKey)) {
+            enabled = it.ipedmanager.service.RamDiskService.getInstance().isAutoMode();
         } else {
             enabled = configManager.getIPEDConfig().getBoolean(configKey, false);
         }

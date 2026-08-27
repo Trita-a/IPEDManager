@@ -1484,9 +1484,37 @@ public class MainFrame extends JFrame {
             try {
                 SwingUtilities.invokeLater(() -> monitor.setVisible(true));
 
-                List<String> cmd = ipedExecutor.buildCommand(
-                        tableModel.getEvidences(), destinationPath,
-                        (String) profileCombo.getSelectedItem(), getOpts());
+                            // GESTIONE RAM DISK AUTOMATICO
+                            it.ipedmanager.service.RamDiskService rds = it.ipedmanager.service.RamDiskService.getInstance();
+                            final boolean[] ramDiskMounted = {false};
+                            final String[] originalTemp = {null};
+                            final it.ipedmanager.config.PropertiesConfigFile[] localConfig = {null};
+
+                            if (rds.isAutoMode()) {
+                                monitor.appendLog("\n[SISTEMA] Creazione RAM Disk in corso (" + rds.getEngine() + ")...");
+                                if (rds.mount()) {
+                                    String letter = rds.getLastAssignedLetter();
+                                    if (letter != null) {
+                                        ramDiskMounted[0] = true;
+                                        monitor.appendLog("\n[SISTEMA] RAM Disk montato su " + letter);
+                                        
+                                        localConfig[0] = it.ipedmanager.config.ConfigManager.getInstance().getConfigFile(it.ipedmanager.config.ConfigManager.LOCAL_CONFIG);
+                                        originalTemp[0] = localConfig[0].getString("indexTemp");
+                                        String ramTemp = letter + "\\Temp";
+                                        localConfig[0].setString("indexTemp", ramTemp);
+                                        localConfig[0].save();
+                                        monitor.appendLog("\n[SISTEMA] Temp di IPED impostata su: " + ramTemp + "\n");
+                                    } else {
+                                        monitor.appendLog("\n[SISTEMA] Impossibile determinare la lettera del RAM Disk. Verranno usate le impostazioni di default.\n");
+                                    }
+                                } else {
+                                    monitor.appendLog("\n[SISTEMA] ERRORE durante la creazione del RAM Disk. L'analisi procederà con il disco fisico.\n");
+                                }
+                            }
+
+                            List<String> cmd = ipedExecutor.buildCommand(
+                                    tableModel.getEvidences(), destinationPath,
+                                    (String) profileCombo.getSelectedItem(), getOpts());
 
                 monitor.appendLog("[SISTEMA] Versione IPED in uso: " + ipedExecutor.getIpedVersion() + "\n");
                 monitor.appendLog(
@@ -1497,6 +1525,21 @@ public class MainFrame extends JFrame {
 
                 SwingUtilities.invokeLater(() -> {
                     monitor.setFinished(true);
+
+                    // SMONTAGGIO RAM DISK AUTOMATICO
+                    if (rds.isAutoMode() && ramDiskMounted[0]) {
+                        monitor.appendLog("\n[SISTEMA] Analisi terminata. Smontaggio RAM Disk in corso...");
+                        if (rds.unmount()) {
+                            monitor.appendLog("\n[SISTEMA] RAM Disk smontato con successo.");
+                        } else {
+                            monitor.appendLog("\n[SISTEMA] ERRORE: Impossibile smontare il RAM Disk automaticamente.");
+                        }
+                        if (localConfig[0] != null && originalTemp[0] != null) {
+                            localConfig[0].setString("indexTemp", originalTemp[0]);
+                            localConfig[0].save();
+                        }
+                    }
+
                     updateButtonStates();
                 });
             } catch (Exception e) {
