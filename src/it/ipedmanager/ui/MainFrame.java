@@ -406,7 +406,7 @@ public class MainFrame extends JFrame {
     }
 
     private JPanel createProfileContent() {
-        JPanel p = new JPanel(new BorderLayout());
+        JPanel p = new JPanel(new BorderLayout(5, 0));
         p.setOpaque(false);
 
         profileCombo = new JComboBox<>();
@@ -421,7 +421,12 @@ public class MainFrame extends JFrame {
             }
         });
 
+        JButton btnManage = createSmallButton("", "folder");
+        btnManage.setToolTipText(BundleManager.getString("mainframe.menu.profiles"));
+        btnManage.addActionListener(e -> openProfileManager());
+
         p.add(profileCombo, BorderLayout.CENTER);
+        p.add(btnManage, BorderLayout.EAST);
         return p;
     }
 
