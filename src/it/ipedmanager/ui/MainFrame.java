@@ -177,9 +177,8 @@ public class MainFrame extends JFrame {
 
         destinationLabel = new JLabel(BundleManager.getString("mainframe.noFolderSelected"));
         zipDestinationLabel = new JLabel(BundleManager.getString("mainframe.destinationDefault"));
-        ipedPathLabel = new JLabel(
-                ipedExecutor.isIpedConfigured() ? smartShortenPath(ipedExecutor.getIpedJarPath(), 35)
-                        : "Non configurato");
+        ipedPathLabel = new JLabel();
+        updateIpedPathLabelText();
 
         // Init fields
         splashField = new JTextField();
@@ -1369,7 +1368,7 @@ public class MainFrame extends JFrame {
         fc.setFileFilter(new FileNameExtensionFilter("IPED JAR", "jar"));
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             ipedExecutor.setIpedJarPath(fc.getSelectedFile().getAbsolutePath());
-            ipedPathLabel.setText(smartShortenPath(ipedExecutor.getIpedJarPath(), 35));
+            updateIpedPathLabelText();
             ipedPathLabel.setForeground(TEXT_PRIMARY);
             updateButtonStates();
         }
@@ -1816,5 +1815,19 @@ public class MainFrame extends JFrame {
         attachAnimation(previewButton, AnimationType.PULSE);
         attachAnimation(openReportButton, AnimationType.PULSE);
         attachAnimation(processButton, AnimationType.PULSE);
+    }
+
+    private void updateIpedPathLabelText() {
+        if (ipedExecutor.isIpedConfigured()) {
+            String ver = ipedExecutor.getIpedVersion();
+            String path = smartShortenPath(ipedExecutor.getIpedJarPath(), 35);
+            if (!"Sconosciuta".equals(ver)) {
+                ipedPathLabel.setText("v" + ver + "  |  " + path);
+            } else {
+                ipedPathLabel.setText(path);
+            }
+        } else {
+            ipedPathLabel.setText("Non configurato");
+        }
     }
 }
