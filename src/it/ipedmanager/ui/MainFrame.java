@@ -41,6 +41,7 @@ public class MainFrame extends JFrame {
     @SuppressWarnings("unused")
     private JLabel zipDestinationLabel;
     private JLabel ipedPathLabel;
+    private JLabel ipedVersionHeaderLabel;
 
     // Checkbox opzioni elaborazione
     private JCheckBox chkContinue, chkRestart, chkAppend, chkNoGui, chkNoLog;
@@ -377,8 +378,10 @@ public class MainFrame extends JFrame {
         row.setOpaque(false);
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 75));
 
-        row.add(createCard(BundleManager.getString("mainframe.card.ipedVersion"), "chip", createIpedContent(),
+        ipedVersionHeaderLabel = createHeaderLabel(BundleManager.getString("mainframe.card.ipedVersion"), "chip");
+        row.add(createCard(ipedVersionHeaderLabel, createIpedContent(),
                 BundleManager.getString("mainframe.tooltip.ipedVersion")));
+        updateIpedPathLabelText(); // Trigger an update now that the label is ready
         row.add(createCard(BundleManager.getString("mainframe.card.profile"), "user", createProfileContent(),
                 BundleManager.getString("mainframe.tooltip.profile")));
         row.add(createCard(BundleManager.getString("mainframe.card.language"), "globe", createLanguageContent(),
@@ -569,24 +572,24 @@ public class MainFrame extends JFrame {
         return createCard(title, icon, content, null);
     }
 
-    private JPanel createCard(String title, String icon, JComponent content, String helpText) {
-        JPanel card = new JPanel(new BorderLayout(0, 4)); // Reduced gap title-content
+    private JPanel createCard(JLabel headerLabel, JComponent content, String helpText) {
+        JPanel card = new JPanel(new BorderLayout(0, 4));
         card.setBackground(CARD_BG);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER_COLOR),
-                new EmptyBorder(5, 10, 5, 10))); // Reduced padding
+                new EmptyBorder(5, 10, 5, 10))); 
 
-        // Separated Header
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
         headerPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)), // Light separator line
-                new EmptyBorder(0, 0, 4, 0))); // Padding below text
+                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)), 
+                new EmptyBorder(0, 0, 4, 0))); 
 
-        headerPanel.add(createHeaderLabel(title, icon), BorderLayout.WEST);
+        headerPanel.add(headerLabel, BorderLayout.WEST);
 
         if (helpText != null) {
-            JButton helpBtn = createHelpButton(title, helpText);
+            String titleStr = headerLabel.getText() != null ? headerLabel.getText().replaceAll("<[^>]*>", "").trim() : "";
+            JButton helpBtn = createHelpButton(titleStr, helpText);
             headerPanel.add(helpBtn, BorderLayout.EAST);
         }
 
@@ -594,6 +597,10 @@ public class MainFrame extends JFrame {
         card.add(content, BorderLayout.CENTER);
 
         return card;
+    }
+
+    private JPanel createCard(String title, String icon, JComponent content, String helpText) {
+        return createCard(createHeaderLabel(title, icon), content, helpText);
     }
 
     private JButton createHelpButton(String title, String message) {
@@ -1821,13 +1828,20 @@ public class MainFrame extends JFrame {
         if (ipedExecutor.isIpedConfigured()) {
             String ver = ipedExecutor.getIpedVersion();
             String path = smartShortenPath(ipedExecutor.getIpedJarPath(), 35);
-            if (!"Sconosciuta".equals(ver)) {
-                ipedPathLabel.setText("<html><b style='color:#1e3a8a;'>IPED v" + ver + "</b> &nbsp;&nbsp; <font color='#6e737d'>" + path + "</font></html>");
-            } else {
-                ipedPathLabel.setText("<html><font color='#6e737d'>" + path + "</font></html>");
+            ipedPathLabel.setText(path);
+            
+            if (ipedVersionHeaderLabel != null) {
+                if (!"Sconosciuta".equals(ver)) {
+                    ipedVersionHeaderLabel.setText("<html> " + BundleManager.getString("mainframe.card.ipedVersion") + " &nbsp;<b style='color:#1e3a8a;'>v" + ver + "</b></html>");
+                } else {
+                    ipedVersionHeaderLabel.setText(" " + BundleManager.getString("mainframe.card.ipedVersion"));
+                }
             }
         } else {
             ipedPathLabel.setText("Non configurato");
+            if (ipedVersionHeaderLabel != null) {
+                ipedVersionHeaderLabel.setText(" " + BundleManager.getString("mainframe.card.ipedVersion"));
+            }
         }
     }
 }
