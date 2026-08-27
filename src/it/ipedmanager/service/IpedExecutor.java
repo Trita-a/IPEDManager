@@ -80,6 +80,27 @@ public class IpedExecutor {
         }
     }
 
+    public String getIpedVersion() {
+        if (ipedJarPath == null || ipedJarPath.isEmpty()) {
+            return "Sconosciuta";
+        }
+        try {
+            File releaseNotes = new File(new File(ipedJarPath).getParentFile(), "ReleaseNotes.txt");
+            if (releaseNotes.exists()) {
+                try (BufferedReader reader = new BufferedReader(new java.io.FileReader(releaseNotes))) {
+                    String firstLine = reader.readLine();
+                    if (firstLine != null && firstLine.contains("IPED-")) {
+                        int idx = firstLine.indexOf("IPED-");
+                        return firstLine.substring(idx + 5).trim();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignora eventuali eccezioni e ritorna Sconosciuta
+        }
+        return "Sconosciuta";
+    }
+
     public void setIpedJarPath(String path) {
         this.ipedJarPath = path;
     }

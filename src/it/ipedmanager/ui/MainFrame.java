@@ -1482,6 +1482,7 @@ public class MainFrame extends JFrame {
                         tableModel.getEvidences(), destinationPath,
                         (String) profileCombo.getSelectedItem(), getOpts());
 
+                monitor.appendLog("[SISTEMA] Versione IPED in uso: " + ipedExecutor.getIpedVersion() + "\n");
                 monitor.appendLog(
                         BundleManager.getString("dialog.monitor.command") + ": " + String.join(" ", cmd) + "\n");
                 monitor.appendLog("---------------------------------------------------\n");
