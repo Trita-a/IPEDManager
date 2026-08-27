@@ -9,7 +9,7 @@ import it.ipedmanager.ui.config.panels.*;
 import javax.swing.*;
 import it.ipedmanager.utils.BundleManager;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +31,7 @@ public class ConfigManagerDialog extends JDialog {
 
     // Colori tema CHIARO
     private static final Color SIDEBAR_BG = new Color(241, 245, 249); // Slate 100 (Slightly darker than content)
+    @SuppressWarnings("unused")
     private static final Color SIDEBAR_BORDER = new Color(226, 232, 240);
     private static final Color SIDEBAR_HOVER = new Color(226, 232, 240); // Slate 200 (Visible hover)
     private static final Color SIDEBAR_SELECTED = new Color(30, 58, 138); // Dark Blue (Navy)
@@ -49,10 +50,14 @@ public class ConfigManagerDialog extends JDialog {
     private AudioConfigPanel audioConfigPanel;
     private MediaConfigPanel mediaConfigPanel; // Unisce Video + Image
     private FaceRecognitionConfigPanel faceConfigPanel;
+    private AgeEstimationConfigPanel ageConfigPanel;
+    private CSAMConfigPanel csamConfigPanel;
+    private RemoteClassifierConfigPanel remoteConfigPanel;
     private PhotoDNAConfigPanel photoDNAConfigPanel;
     private ElasticConfigPanel elasticConfigPanel;
     private MinIOConfigPanel minIOConfigPanel;
     private ExportConfigPanel exportConfigPanel;
+
 
     // Menu items - Simplified Icons (Letters/Symbols that are safe)
     // Structure: { ID, ICON, TITLE, SUBTITLE, CATEGORY, CONFIG_KEY (optional) }
@@ -70,8 +75,15 @@ public class ConfigManagerDialog extends JDialog {
             { "media", "media", "sidebar.media", "sidebar.subtitle.media", "sidebar.category.analisi",
                     "virtual:media" },
             { "---", "", "", "", "", null },
-            { "volti", "face", "sidebar.volti", "sidebar.subtitle.volti", "sidebar.category.avanzato",
+            { "volti", "face", "sidebar.volti", "sidebar.subtitle.volti", "sidebar.category.ai",
                     "enableFaceRecognition" },
+            { "age", "face", "sidebar.age", "sidebar.subtitle.age", "sidebar.category.ai",
+                    "enableAgeEstimation" },
+            { "csam", "gears", "sidebar.csam", "sidebar.subtitle.csam", "sidebar.category.ai",
+                    "enableCSAMDetector" },
+            { "remote", "gears", "sidebar.remote", "sidebar.subtitle.remote", "sidebar.category.ai",
+                    "enableRemoteImageClassifier" },
+            { "---", "", "", "", "", null },
             { "photodna", "photodna", "sidebar.photodna", "sidebar.subtitle.photodna", "sidebar.category.avanzato",
                     "enablePhotoDNA" },
             { "elastic", "elastic", "sidebar.elastic", "sidebar.subtitle.elastic", "sidebar.category.avanzato",
@@ -80,6 +92,7 @@ public class ConfigManagerDialog extends JDialog {
             { "export", "export", "sidebar.export", "sidebar.subtitle.export", "sidebar.category.avanzato",
                     "enableAutomaticExportFiles" }
     };
+
 
     // Map to hold overlay panels for enabling/disabling
     private Map<String, OverlayPanel> panelOverlays = new HashMap<>();
@@ -163,6 +176,7 @@ public class ConfigManagerDialog extends JDialog {
         return content;
     }
 
+    @SuppressWarnings("unused")
     private JPanel createHeader() {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(HEADER_BG);
@@ -753,6 +767,27 @@ public class ConfigManagerDialog extends JDialog {
                         faceConfigPanel, "enableFaceRecognition", "volti"),
                 "volti");
 
+        ageConfigPanel = new AgeEstimationConfigPanel();
+        contentPanel.add(
+                createWrappedPanel(BundleManager.getString("panel.age.title"),
+                        BundleManager.getString("panel.age.description"),
+                        ageConfigPanel, "enableAgeEstimation", "age"),
+                "age");
+
+        csamConfigPanel = new CSAMConfigPanel();
+        contentPanel.add(
+                createWrappedPanel(BundleManager.getString("panel.csam.title"),
+                        BundleManager.getString("panel.csam.description"),
+                        csamConfigPanel, "enableCSAMDetector", "csam"),
+                "csam");
+
+        remoteConfigPanel = new RemoteClassifierConfigPanel();
+        contentPanel.add(
+                createWrappedPanel(BundleManager.getString("panel.remote.title"),
+                        BundleManager.getString("panel.remote.description"),
+                        remoteConfigPanel, "enableRemoteImageClassifier", "remote"),
+                "remote");
+
         photoDNAConfigPanel = new PhotoDNAConfigPanel();
         contentPanel.add(
                 createWrappedPanel(BundleManager.getString("panel.photodna.title"),
@@ -790,6 +825,9 @@ public class ConfigManagerDialog extends JDialog {
         panelsMap.put("audio", audioConfigPanel);
         panelsMap.put("media", mediaConfigPanel);
         panelsMap.put("volti", faceConfigPanel);
+        panelsMap.put("age", ageConfigPanel);
+        panelsMap.put("csam", csamConfigPanel);
+        panelsMap.put("remote", remoteConfigPanel);
         panelsMap.put("photodna", photoDNAConfigPanel);
         panelsMap.put("elastic", elasticConfigPanel);
         panelsMap.put("minio", minIOConfigPanel);
@@ -857,6 +895,7 @@ public class ConfigManagerDialog extends JDialog {
 
     // Helper to create wrapped panel with Overlay and register it
     private JPanel createWrappedPanel(String title, String desc, JPanel content, String configKey, String id) {
+        @SuppressWarnings("unused")
         JPanel normalWrapper = wrapContent(title, desc, content);
 
         // Wrap the whole thing (including header? No, just the content part)

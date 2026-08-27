@@ -15,6 +15,7 @@ import javax.swing.*;
 public class ToggleSwitch extends JComponent {
 
     private boolean selected = false;
+    @SuppressWarnings("unused")
     private boolean hover = false;
 
     // Animation

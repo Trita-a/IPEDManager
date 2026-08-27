@@ -1,20 +1,14 @@
 package it.ipedmanager.ui.config.panels;
 
 import it.ipedmanager.config.ConfigManager;
-import it.ipedmanager.config.ConfigManager;
+
 import it.ipedmanager.config.PropertiesConfigFile;
 import it.ipedmanager.utils.BundleManager;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.plaf.basic.BasicComboBoxUI;
-import javax.swing.plaf.basic.BasicSpinnerUI;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Path2D;
+
 import java.io.File;
 
 /**

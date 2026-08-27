@@ -26,6 +26,10 @@ public class ConfigManager {
     public static final String FACE_CONFIG = "FaceRecognitionConfig.txt";
     public static final String PHOTODNA_CONFIG = "PhotoDNAConfig.txt";
     public static final String HTML_REPORT_CONFIG = "HTMLReportConfig.txt";
+    public static final String CSAM_CONFIG = "CSAMDetectorConfig.txt";
+    public static final String AGE_CONFIG = "AgeEstimationConfig.txt";
+    public static final String REMOTE_CLASSIFIER_CONFIG = "RemoteImageClassifierConfig.txt";
+
 
     private ConfigManager() {
         configFiles = new HashMap<>();

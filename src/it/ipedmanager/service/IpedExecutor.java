@@ -18,6 +18,8 @@ public class IpedExecutor {
     private String ipedJarPath;
     private String jrePath;
     private static final String PREF_IPED_PATH = "ipedPath";
+    private Process currentProcess;
+
 
     public IpedExecutor() {
         detectIpedPaths();
@@ -205,10 +207,10 @@ public class IpedExecutor {
         pb.redirectErrorStream(true);
         pb.directory(new File(ipedJarPath).getParentFile());
 
-        Process process = pb.start();
+        currentProcess = pb.start();
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()))) {
+                new InputStreamReader(currentProcess.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (outputCallback != null) {
@@ -217,8 +219,19 @@ public class IpedExecutor {
             }
         }
 
-        process.waitFor();
+        currentProcess.waitFor();
+        currentProcess = null;
     }
+
+    /**
+     * Annulla l'esecuzione del processo corrente in modo sicuro.
+     */
+    public void abortExecution() {
+        if (currentProcess != null && currentProcess.isAlive()) {
+            currentProcess.destroy();
+        }
+    }
+
 
     /**
      * Classe per le opzioni di elaborazione.

@@ -16,7 +16,11 @@ public class ExecutionMonitorDialog extends JDialog {
     private JTextArea logArea;
     private JProgressBar progressBar;
     private JButton closeButton;
+    private JButton stopButton;
+    @SuppressWarnings("unused")
     private boolean finished = false;
+    private Runnable onStopCallback;
+
 
     public ExecutionMonitorDialog(Window owner) {
         super(owner, BundleManager.getString("dialog.monitor.title"), ModalityType.APPLICATION_MODAL);
@@ -72,11 +76,36 @@ public class ExecutionMonitorDialog extends JDialog {
         closeButton.setEnabled(false);
         closeButton.addActionListener(e -> dispose());
 
+        stopButton = new JButton("Interrompi");
+        stopButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        stopButton.setForeground(new Color(220, 38, 38)); // Red color
+        stopButton.addActionListener(e -> {
+            int res = JOptionPane.showConfirmDialog(this, 
+                "Sei sicuro di voler interrompere l'analisi in corso? L'operazione non può essere annullata.",
+                "Conferma Interruzione", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (res == JOptionPane.YES_OPTION) {
+                stopButton.setEnabled(false);
+                if (onStopCallback != null) {
+                    onStopCallback.run();
+                }
+            }
+        });
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(stopButton);
+        buttonPanel.add(closeButton);
+
         footer.add(progressBar, BorderLayout.CENTER);
-        footer.add(closeButton, BorderLayout.EAST);
+        footer.add(buttonPanel, BorderLayout.EAST);
 
         add(footer, BorderLayout.SOUTH);
     }
+
+    public void setOnStopCallback(Runnable callback) {
+        this.onStopCallback = callback;
+    }
+
 
     public void appendLog(String text) {
         SwingUtilities.invokeLater(() -> {
@@ -93,6 +122,7 @@ public class ExecutionMonitorDialog extends JDialog {
                     : BundleManager.getString("dialog.monitor.status.error"));
             setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             closeButton.setEnabled(true);
+            if (stopButton != null) stopButton.setEnabled(false);
 
             // Re-enable close button logic
             closeButton.requestFocus();

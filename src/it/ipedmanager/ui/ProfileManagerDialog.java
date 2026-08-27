@@ -6,7 +6,7 @@ import it.ipedmanager.ui.config.VectorIcon;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;

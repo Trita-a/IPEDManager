@@ -9,9 +9,7 @@ import it.ipedmanager.config.ConfigManager;
 import it.ipedmanager.config.PropertiesConfigFile;
 import it.ipedmanager.utils.BundleManager;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import it.ipedmanager.ui.config.VectorIcon;
-import it.ipedmanager.ui.config.VectorIcons;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,7 +33,12 @@ import java.util.List;
 public class MainFrame extends JFrame {
 
     private EvidenceTableModel tableModel;
+    @SuppressWarnings("unused")
+    private JLabel infoLabel;
+    @SuppressWarnings("unused")
+    private JProgressBar globalProgress;
     private JLabel destinationLabel;
+    @SuppressWarnings("unused")
     private JLabel zipDestinationLabel;
     private JLabel ipedPathLabel;
 
@@ -60,6 +63,7 @@ public class MainFrame extends JFrame {
     // Servizi
     private IpedExecutor ipedExecutor;
     private String destinationPath = "";
+    @SuppressWarnings("unused")
     private String zipDestinationPath = "";
     private File lastUsedDir; // Memory field
 
@@ -71,12 +75,14 @@ public class MainFrame extends JFrame {
     private static final Color BORDER_COLOR = new Color(225, 229, 235);
     private static final Color TEXT_PRIMARY = new Color(40, 45, 55);
     private static final Color TEXT_SECONDARY = new Color(110, 115, 125);
-    private static final Color MENU_TEXT_COLOR = Color.WHITE; // Contrast for Header
 
     private static final Color PRIMARY_BLUE = new Color(30, 58, 138); // Navy Blue
     private static final Color PRIMARY_BLUE_BORDER = new Color(30, 58, 138); // Navy Blue
     private static final Color SUCCESS_GREEN = new Color(16, 185, 129);
     private static final Color DANGER_RED = new Color(239, 68, 68);
+    @SuppressWarnings("unused")
+    private static final Color MENU_TEXT_COLOR = Color.WHITE;
+    @SuppressWarnings("unused")
     private static final Color TABLE_HEADER_BG = new Color(241, 245, 249); // Slate 100
 
     private static final String[] SUPPORTED_EXTENSIONS = { "e01", "001", "dd", "raw", "bin", "vmdk", "iso", "ufdr",
@@ -559,6 +565,7 @@ public class MainFrame extends JFrame {
         return p;
     }
 
+    @SuppressWarnings("unused")
     private JPanel createCard(String title, String icon, JComponent content) {
         return createCard(title, icon, content, null);
     }
@@ -1084,6 +1091,7 @@ public class MainFrame extends JFrame {
 
     // ==================== HEADER ====================
 
+    @SuppressWarnings("unused")
     private JPanel createHeaderPanel() {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(HEADER_BG);
@@ -1460,6 +1468,11 @@ public class MainFrame extends JFrame {
         // Open Monitor Dialog
         ExecutionMonitorDialog monitor = new ExecutionMonitorDialog(this);
         monitor.setLocationRelativeTo(this);
+        monitor.setOnStopCallback(() -> {
+            monitor.appendLog("\n[SISTEMA] Richiesta di interruzione inviata. Attendere...");
+            ipedExecutor.abortExecution();
+        });
+
 
         new Thread(() -> {
             try {
