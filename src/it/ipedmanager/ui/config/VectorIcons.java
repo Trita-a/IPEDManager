@@ -230,6 +230,7 @@ public class VectorIcons {
                 break;
 
             case "chip":
+            case "cpu":
                 g2.draw(new RoundRectangle2D.Double(4, 4, 16, 16, 4, 4));
                 g2.draw(new Rectangle2D.Double(9, 9, 6, 6));
                 // pins
@@ -241,6 +242,27 @@ public class VectorIcons {
                 g2.draw(new Line2D.Double(1, 15, 4, 15));
                 g2.draw(new Line2D.Double(20, 9, 23, 9));
                 g2.draw(new Line2D.Double(20, 15, 23, 15));
+                break;
+
+            case "harddrive":
+            case "disk":
+                g2.draw(new RoundRectangle2D.Double(2, 4, 20, 16, 3, 3));
+                g2.draw(new Line2D.Double(2, 14, 22, 14));
+                g2.fill(new Ellipse2D.Double(6, 17, 2, 2));
+                g2.fill(new Ellipse2D.Double(10, 17, 2, 2));
+                break;
+
+            case "activity":
+            case "gauge":
+                // ECG / Pulse Line
+                Path2D act = new Path2D.Double();
+                act.moveTo(2, 12);
+                act.lineTo(6, 12);
+                act.lineTo(9, 4);
+                act.lineTo(15, 20);
+                act.lineTo(18, 12);
+                act.lineTo(22, 12);
+                g2.draw(act);
                 break;
 
             case "sliders":

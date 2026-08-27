@@ -76,6 +76,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 </p>
 
 <p align="center">
+  <img src="assets/Screenshot_monitor.png" alt="Execution Monitor & Hardware Dashboard" width="800">
+  <br>
+  <em>Real-time Execution Monitor - live log console, hardware metrics & dedicated IPED stats</em>
+</p>
+
+<p align="center">
   <img src="assets/Screenshot_settings.png" alt="Settings Panel" width="800">
   <br>
   <em>Advanced Configuration - easy-to-use toggles and settings</em>

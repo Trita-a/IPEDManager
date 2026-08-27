@@ -5,6 +5,7 @@ import it.ipedmanager.Main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -19,6 +20,7 @@ public class IpedExecutor {
     private String jrePath;
     private static final String PREF_IPED_PATH = "ipedPath";
     private Process currentProcess;
+    private boolean wasAborted = false;
 
 
     public IpedExecutor() {
@@ -223,12 +225,21 @@ public class IpedExecutor {
     /**
      * Esegue IPED con output in tempo reale.
      */
-    public void execute(List<String> command, Consumer<String> outputCallback) throws Exception {
+    public int execute(List<String> command, Consumer<String> outputCallback) throws Exception {
+        wasAborted = false;
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.redirectErrorStream(true);
         pb.directory(new File(ipedJarPath).getParentFile());
 
         currentProcess = pb.start();
+
+        long pid = -1;
+        try {
+            Method pidMethod = Process.class.getMethod("pid");
+            pid = (Long) pidMethod.invoke(currentProcess);
+        } catch (Exception ignored) {
+        }
+        SystemHardwareService.getInstance().setIpedPid(pid);
 
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(currentProcess.getInputStream()))) {
@@ -240,17 +251,24 @@ public class IpedExecutor {
             }
         }
 
-        currentProcess.waitFor();
+        int exitCode = currentProcess.waitFor();
         currentProcess = null;
+        SystemHardwareService.getInstance().setIpedPid(-1);
+        return exitCode;
     }
 
     /**
      * Annulla l'esecuzione del processo corrente in modo sicuro.
      */
     public void abortExecution() {
+        wasAborted = true;
         if (currentProcess != null && currentProcess.isAlive()) {
             currentProcess.destroy();
         }
+    }
+
+    public boolean isAborted() {
+        return wasAborted;
     }
 
 

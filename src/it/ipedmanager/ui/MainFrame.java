@@ -328,6 +328,9 @@ public class MainFrame extends JFrame {
         // Profile Manager
         popup.add(createPopupItem(BundleManager.getString("mainframe.menu.profiles"), "folder",
                 e -> openProfileManager()));
+        // Live PC Performance Monitor
+        popup.add(createPopupItem(BundleManager.getString("mainframe.menu.hardwareMonitor"), "activity",
+                e -> SystemPerformanceDialog.showDialog(this)));
         popup.addSeparator();
 
         // Help Section
@@ -1460,6 +1463,12 @@ public class MainFrame extends JFrame {
         // Open Monitor Dialog
         ExecutionMonitorDialog monitor = new ExecutionMonitorDialog(this);
         monitor.setLocationRelativeTo(this);
+
+        ProcessingOptions opts = getOpts();
+        it.ipedmanager.config.PropertiesConfigFile initLc = it.ipedmanager.config.ConfigManager.getInstance().getConfigFile(it.ipedmanager.config.ConfigManager.LOCAL_CONFIG);
+        String initTemp = initLc != null ? initLc.getString("indexTemp") : null;
+        monitor.setPaths(destinationPath, initTemp, false, opts.maxMemoryGB);
+
         monitor.setOnStopCallback(() -> {
             monitor.appendLog("\n[SISTEMA] Richiesta di interruzione inviata. Attendere...");
             ipedExecutor.abortExecution();
@@ -1489,6 +1498,7 @@ public class MainFrame extends JFrame {
                                         String ramTemp = letter + "\\Temp";
                                         localConfig[0].setString("indexTemp", ramTemp);
                                         localConfig[0].save();
+                                        monitor.setPaths(destinationPath, ramTemp, true, opts.maxMemoryGB);
                                         monitor.appendLog("\n[SISTEMA] Temp di IPED impostata su: " + ramTemp + "\n");
                                     } else {
                                         monitor.appendLog("\n[SISTEMA] Impossibile determinare la lettera del RAM Disk. Verranno usate le impostazioni di default.\n");
@@ -1500,17 +1510,18 @@ public class MainFrame extends JFrame {
 
                             List<String> cmd = ipedExecutor.buildCommand(
                                     tableModel.getEvidences(), destinationPath,
-                                    (String) profileCombo.getSelectedItem(), getOpts());
+                                    (String) profileCombo.getSelectedItem(), opts);
 
                 monitor.appendLog("[SISTEMA] Versione IPED in uso: " + ipedExecutor.getIpedVersion() + "\n");
                 monitor.appendLog(
                         BundleManager.getString("dialog.monitor.command") + ": " + String.join(" ", cmd) + "\n");
                 monitor.appendLog("---------------------------------------------------\n");
 
-                ipedExecutor.execute(cmd, line -> monitor.appendLog(line));
+                int exitCode = ipedExecutor.execute(cmd, line -> monitor.appendLog(line));
+                boolean success = (exitCode == 0) && !ipedExecutor.isAborted();
 
                 SwingUtilities.invokeLater(() -> {
-                    monitor.setFinished(true);
+                    monitor.setFinished(success);
 
                     // SMONTAGGIO RAM DISK AUTOMATICO
                     if (rds.isAutoMode() && ramDiskMounted[0]) {
