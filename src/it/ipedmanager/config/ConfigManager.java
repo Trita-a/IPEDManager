@@ -12,6 +12,7 @@ public class ConfigManager {
     private Path confPath;
     private Path ipedPath;
     private Map<String, PropertiesConfigFile> configFiles;
+    private String activeProfile;
 
     // Nomi file configurazione
     public static final String LOCAL_CONFIG = "LocalConfig.txt";
@@ -59,9 +60,49 @@ public class ConfigManager {
         configFiles.clear();
     }
 
+    public void setActiveProfile(String profileName) {
+        if (profileName == null || profileName.equals("Personalizzato") || profileName.isEmpty()) {
+            this.activeProfile = null;
+        } else {
+            this.activeProfile = profileName;
+        }
+        reload(); // Svuota la cache in modo che la GUI ricarichi i file dal percorso giusto
+    }
+
+    public String getActiveProfile() {
+        return this.activeProfile;
+    }
+
     public PropertiesConfigFile getConfigFile(String fileName) {
         if (!configFiles.containsKey(fileName)) {
-            Path path = confPath.resolve(fileName);
+            Path path = null;
+            
+            // Se c'è un profilo attivo, cerca il file nel profilo
+            if (activeProfile != null) {
+                Path profileConfDir = getProfilesPath().resolve(activeProfile).resolve("conf");
+                path = profileConfDir.resolve(fileName);
+                
+                // Se il file non esiste nel profilo, copialo dalla base in modo che i futuri salvataggi vadano al profilo
+                if (!Files.exists(path)) {
+                    Path basePath = confPath.resolve(fileName);
+                    if (Files.exists(basePath)) {
+                        try {
+                            if (!Files.exists(profileConfDir)) {
+                                Files.createDirectories(profileConfDir);
+                            }
+                            Files.copy(basePath, path, StandardCopyOption.REPLACE_EXISTING);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            path = basePath; // Fallback alla base in caso di errore
+                        }
+                    } else {
+                        path = basePath; // File non esiste nemmeno nella base
+                    }
+                }
+            } else {
+                path = confPath.resolve(fileName);
+            }
+            
             PropertiesConfigFile config = new PropertiesConfigFile(path);
             if (config.load()) {
                 configFiles.put(fileName, config);
@@ -97,7 +138,34 @@ public class ConfigManager {
 
     public PropertiesConfigFile getIpedConfig() {
         if (!configFiles.containsKey(IPED_CONFIG)) {
-            Path path = ipedPath.resolve(IPED_CONFIG);
+            Path path = null;
+            
+            // Se c'è un profilo attivo, cerca IPEDConfig.txt nel profilo
+            if (activeProfile != null) {
+                Path profileDir = getProfilesPath().resolve(activeProfile);
+                path = profileDir.resolve(IPED_CONFIG);
+                
+                // Se il file non esiste nel profilo, copialo dalla base
+                if (!Files.exists(path)) {
+                    Path basePath = ipedPath.resolve(IPED_CONFIG);
+                    if (Files.exists(basePath)) {
+                        try {
+                            if (!Files.exists(profileDir)) {
+                                Files.createDirectories(profileDir);
+                            }
+                            Files.copy(basePath, path, StandardCopyOption.REPLACE_EXISTING);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            path = basePath;
+                        }
+                    } else {
+                        path = basePath;
+                    }
+                }
+            } else {
+                path = ipedPath.resolve(IPED_CONFIG);
+            }
+            
             PropertiesConfigFile config = new PropertiesConfigFile(path);
             if (config.load()) {
                 configFiles.put(IPED_CONFIG, config);
@@ -155,80 +223,8 @@ public class ConfigManager {
      * @return true if profile configs were loaded successfully
      */
     public boolean loadProfileConfig(String profileName) {
-        if (profileName == null || profileName.isEmpty()) {
-            return false;
-        }
-
-        Path profilePath = getProfilesPath().resolve(profileName);
-        if (!Files.isDirectory(profilePath)) {
-            return false;
-        }
-
-        boolean loaded = false;
-
-        // Load IPEDConfig.txt from profile (if exists)
-        Path profileIpedConfig = profilePath.resolve(IPED_CONFIG);
-        if (Files.exists(profileIpedConfig)) {
-            PropertiesConfigFile profileConfig = new PropertiesConfigFile(profileIpedConfig);
-            if (profileConfig.load()) {
-                // Ensure base IPEDConfig is loaded first
-                PropertiesConfigFile currentConfig = getIpedConfig();
-                if (currentConfig == null) {
-                    // Base config doesn't exist, create it from main iped path
-                    Path mainIpedConfig = ipedPath.resolve(IPED_CONFIG);
-                    currentConfig = new PropertiesConfigFile(mainIpedConfig);
-                    currentConfig.load();
-                    configFiles.put(IPED_CONFIG, currentConfig);
-                }
-                // Merge profile settings into current config
-                int changedCount = 0;
-                for (String key : profileConfig.getKeys()) {
-                    String newValue = profileConfig.get(key);
-                    String oldValue = currentConfig.get(key);
-                    currentConfig.set(key, newValue);
-                    if (!newValue.equals(oldValue)) {
-                        changedCount++;
-                        System.out.println("[Profile] Changed: " + key + " = " + oldValue + " -> " + newValue);
-                    }
-                }
-                System.out.println("[Profile] Total changed settings: " + changedCount);
-                loaded = true;
-            }
-        }
-
-        // Load config files from profile's conf/ directory (if exists)
-        Path profileConfPath = profilePath.resolve("conf");
-        if (Files.isDirectory(profileConfPath)) {
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(profileConfPath, "*.txt")) {
-                for (Path file : stream) {
-                    String fileName = file.getFileName().toString();
-                    PropertiesConfigFile profileConfig = new PropertiesConfigFile(file);
-                    if (profileConfig.load()) {
-                        // Ensure base config is loaded first
-                        PropertiesConfigFile currentConfig = getConfigFile(fileName);
-                        if (currentConfig == null) {
-                            // Base config doesn't exist in cache, load from main conf/
-                            Path mainConfFile = confPath.resolve(fileName);
-                            if (Files.exists(mainConfFile)) {
-                                currentConfig = new PropertiesConfigFile(mainConfFile);
-                                currentConfig.load();
-                                configFiles.put(fileName, currentConfig);
-                            }
-                        }
-                        // Merge profile settings into current config
-                        if (currentConfig != null) {
-                            for (String key : profileConfig.getKeys()) {
-                                currentConfig.set(key, profileConfig.get(key));
-                            }
-                            loaded = true;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return loaded;
+        // Obsoleto: usare setActiveProfile(profileName)
+        setActiveProfile(profileName);
+        return true;
     }
 }

@@ -431,11 +431,6 @@ public class MainFrame extends JFrame {
      * Settings are written to the conf/ files so IPED uses them directly.
      */
     private void onProfileSelected(String profileName) {
-        if (profileName == null || profileName.equals("Personalizzato")) {
-            // "Personalizzato" keeps current settings unchanged
-            return;
-        }
-
         // Ensure IPED is configured before loading profile
         if (!ipedExecutor.isIpedConfigured()) {
             return;
@@ -444,23 +439,9 @@ public class MainFrame extends JFrame {
         // Initialize ConfigManager if not already done
         it.ipedmanager.config.ConfigManager cm = it.ipedmanager.config.ConfigManager.getInstance();
         cm.initialize(ipedExecutor.getIpedJarPath());
-
-        // Load profile's config files and merge with current settings
-        if (cm.loadProfileConfig(profileName)) {
-            // Save the merged settings to disk
-            boolean saved = cm.saveAll();
-
-            // Show notification with profile path for debugging
-            String profilePath = cm.getProfilesPath().resolve(profileName).toString();
-            DialogHelper.showSuccess(this,
-                    BundleManager.getString("mainframe.dialog.profileApplied.title"),
-                    BundleManager.getString("mainframe.dialog.profileApplied.message", profileName, profilePath,
-                            (saved ? "Sì" : "No")));
-        } else {
-            DialogHelper.showError(this,
-                    BundleManager.getString("dialog.error.title"),
-                    BundleManager.getString("mainframe.dialog.profileError.message", profileName));
-        }
+        
+        // Imposta il profilo attivo (se null o "Personalizzato", userà i file base)
+        cm.setActiveProfile(profileName);
     }
 
     private void reloadProfiles() {
