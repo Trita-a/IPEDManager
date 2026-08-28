@@ -18,7 +18,7 @@ import java.util.prefs.Preferences;
  */
 public class Main {
 
-    public static final String VERSION = "1.2.0"; // Version with Real-time Performance Monitor & IPED 4.3.1 AI
+    public static final String VERSION = "1.2.1"; // JVM Memory Fix & Pre-flight Resource Summary
     public static final String AUTHOR = "William Tritapepe";
     private static final String PREF_IPED_PATH = "ipedPath";
 
@@ -92,10 +92,7 @@ public class Main {
             UIManager.put("CheckBox.icon.hoverBorderColor", navy);
             UIManager.put("CheckBox.icon.checkmarkColor", Color.WHITE);
 
-            // Immersive Header (Navy Blue TitleBar & MenuBar)
-            UIManager.put("TitlePane.background", navy);
-            UIManager.put("TitlePane.foreground", Color.WHITE);
-            UIManager.put("TitlePane.unifiedBackground", true);
+            // Immersive Header (Navy Blue MenuBar)
             UIManager.put("MenuBar.background", navy);
             UIManager.put("MenuBar.foreground", Color.WHITE);
             UIManager.put("MenuBar.bordered", false); // Seamless look

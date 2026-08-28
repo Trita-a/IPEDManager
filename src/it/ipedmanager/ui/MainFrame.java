@@ -23,6 +23,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * Finestra principale di IPEDManager - Design Professionale
@@ -107,6 +108,14 @@ public class MainFrame extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // --- FlatLaf TitleBar Integration for Main Window ---
+        Color navy = new Color(30, 58, 138);
+        getRootPane().putClientProperty("JRootPane.titleBarBackground", navy);
+        getRootPane().putClientProperty("JRootPane.titleBarForeground", Color.WHITE);
+        getRootPane().putClientProperty("JRootPane.titleBarButtonIconColor", Color.WHITE);
+        getRootPane().putClientProperty("JRootPane.titleBarButtonHoverBackground", new Color(60, 100, 170));
+        getRootPane().putClientProperty("JRootPane.titleBarButtonPressedBackground", new Color(80, 120, 190));
 
         this.ipedExecutor = new IpedExecutor();
 
@@ -931,55 +940,53 @@ public class MainFrame extends JFrame {
 
         panel.add(header, BorderLayout.NORTH);
 
-        // === PROFESSIONAL COMPACT TABLE STYLING ===
-        evidenceTable.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        // === PROFESSIONAL COMPACT TABLE STYLING WITH SPACIOUS PADDING ===
+        evidenceTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         evidenceTable.setSelectionBackground(new Color(220, 235, 252)); // Soft blue selection
         evidenceTable.setSelectionForeground(Color.BLACK);
-        evidenceTable.setRowHeight(20); // Compact rows (User likes this)
+        evidenceTable.setRowHeight(28); // Generous row height with breathing room
         evidenceTable.setShowGrid(false); // Global OFF
-        evidenceTable.setShowVerticalLines(false); // Explicitly OFF (User request: clean)
+        evidenceTable.setShowVerticalLines(false); // Explicitly OFF
         evidenceTable.setShowHorizontalLines(true); // Horizontal ON
-        evidenceTable.setGridColor(new Color(240, 240, 240)); // Very subtle grid
+        evidenceTable.setGridColor(new Color(241, 245, 249)); // Slate-100 subtle line
         evidenceTable.setFillsViewportHeight(true);
         evidenceTable.setIntercellSpacing(new Dimension(0, 1));
 
         // Optimized column widths for 6-column layout with icon
-        evidenceTable.getColumnModel().getColumn(0).setPreferredWidth(22); // Icon type
-        evidenceTable.getColumnModel().getColumn(0).setMaxWidth(24);
-        evidenceTable.getColumnModel().getColumn(0).setMinWidth(22);
-        evidenceTable.getColumnModel().getColumn(1).setPreferredWidth(140); // Name
-        evidenceTable.getColumnModel().getColumn(1).setMinWidth(80);
-        evidenceTable.getColumnModel().getColumn(2).setPreferredWidth(250); // Path
-        evidenceTable.getColumnModel().getColumn(2).setMinWidth(100);
-        evidenceTable.getColumnModel().getColumn(3).setPreferredWidth(60); // Size
-        evidenceTable.getColumnModel().getColumn(3).setMaxWidth(70);
-        evidenceTable.getColumnModel().getColumn(3).setMinWidth(50);
-        evidenceTable.getColumnModel().getColumn(4).setPreferredWidth(70); // Password
-        evidenceTable.getColumnModel().getColumn(4).setMaxWidth(90);
-        evidenceTable.getColumnModel().getColumn(5).setPreferredWidth(24); // Delete
-        evidenceTable.getColumnModel().getColumn(5).setMaxWidth(28);
-        evidenceTable.getColumnModel().getColumn(5).setMinWidth(24);
+        evidenceTable.getColumnModel().getColumn(0).setPreferredWidth(34); // Icon type
+        evidenceTable.getColumnModel().getColumn(0).setMaxWidth(38);
+        evidenceTable.getColumnModel().getColumn(0).setMinWidth(30);
+        evidenceTable.getColumnModel().getColumn(1).setPreferredWidth(160); // Name
+        evidenceTable.getColumnModel().getColumn(1).setMinWidth(100);
+        evidenceTable.getColumnModel().getColumn(2).setPreferredWidth(300); // Path
+        evidenceTable.getColumnModel().getColumn(2).setMinWidth(120);
+        evidenceTable.getColumnModel().getColumn(3).setPreferredWidth(75); // Size
+        evidenceTable.getColumnModel().getColumn(3).setMaxWidth(95);
+        evidenceTable.getColumnModel().getColumn(3).setMinWidth(60);
+        evidenceTable.getColumnModel().getColumn(4).setPreferredWidth(85); // Password
+        evidenceTable.getColumnModel().getColumn(4).setMaxWidth(105);
+        evidenceTable.getColumnModel().getColumn(4).setMinWidth(70);
+        evidenceTable.getColumnModel().getColumn(5).setPreferredWidth(36); // Delete
+        evidenceTable.getColumnModel().getColumn(5).setMaxWidth(40);
+        evidenceTable.getColumnModel().getColumn(5).setMinWidth(32);
 
-        // Professional cell renderer with icons
+        // Professional cell renderer with icons and generous padding
         DefaultTableCellRenderer professionalRenderer = new DefaultTableCellRenderer() {
             private final Color EVEN_ROW = Color.WHITE;
-            private final Color ODD_ROW = new Color(248, 249, 250); // More visible zebra (Bootstrap gray-100)
+            private final Color ODD_ROW = new Color(248, 250, 252); // Slate-50 zebra
             private final Color SELECTED_BG = new Color(220, 235, 252);
             private final Color DELETE_RED = new Color(220, 53, 69);
-            private final Color FOLDER_COLOR = new Color(255, 193, 7); // Amber
-            private final Color FILE_COLOR = new Color(108, 117, 125); // Gray
+            private final Color FOLDER_COLOR = new Color(245, 158, 11); // Amber 500
+            private final Color FILE_COLOR = new Color(100, 116, 139); // Slate 500
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                     boolean hasFocus, int row, int column) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                // Reset icon (set only for column 0)
+                // Reset icon
                 setIcon(null);
-
-                // Compact padding
-                setBorder(new EmptyBorder(0, 4, 0, 4));
-                setFont(new Font("Segoe UI", Font.PLAIN, 11));
+                setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
                 // Background and foreground
                 if (isSelected) {
@@ -990,30 +997,32 @@ public class MainFrame extends JFrame {
                     setForeground(TEXT_PRIMARY);
                 }
 
-                // Column-specific logic (6 columns now)
+                // Column-specific styling and padding
                 switch (column) {
-                    case 0: // Type Icon (Folder/File) - use VectorIcon
+                    case 0: // Type Icon (Folder/File)
                         setHorizontalAlignment(JLabel.CENTER);
-                        setBorder(new EmptyBorder(0, 0, 0, 0));
-                        setText(""); // Clear text, we'll use icon
+                        setBorder(new EmptyBorder(0, 8, 0, 2));
+                        setText("");
                         if ("D".equals(value)) {
-                            setIcon(new VectorIcon("folder", 20, FOLDER_COLOR));
+                            setIcon(new VectorIcon("folder", 18, FOLDER_COLOR));
                             setToolTipText(BundleManager.getString("mainframe.table.tooltip.folder"));
                         } else {
-                            setIcon(new VectorIcon("file", 20, FILE_COLOR));
+                            setIcon(new VectorIcon("file", 18, FILE_COLOR));
                             setToolTipText(BundleManager.getString("mainframe.table.tooltip.file"));
                         }
                         break;
-                    case 1: // Name - bold, left aligned
-                        setFont(new Font("Segoe UI", Font.BOLD, 11));
+                    case 1: // Name - bold, left aligned with left margin
+                        setFont(new Font("Segoe UI", Font.BOLD, 12));
                         setHorizontalAlignment(JLabel.LEFT);
+                        setBorder(new EmptyBorder(0, 6, 0, 8));
                         if (value != null) {
                             String name = value.toString();
                             setToolTipText(name.length() > 20 ? name : null);
                         }
                         break;
-                    case 2: // Path - truncated with full tooltip
+                    case 2: // Path - left aligned with padding
                         setHorizontalAlignment(JLabel.LEFT);
+                        setBorder(new EmptyBorder(0, 8, 0, 8));
                         if (value instanceof String) {
                             String path = (String) value;
                             setText(smartShortenPath(path, 40));
@@ -1021,14 +1030,16 @@ public class MainFrame extends JFrame {
                                     + "</b> " + path + "</html>");
                         }
                         break;
-                    case 3: // Size - right aligned, monospace-like
+                    case 3: // Size - right aligned with right margin
                         setHorizontalAlignment(JLabel.RIGHT);
-                        setFont(new Font("Consolas", Font.PLAIN, 10));
-                        setForeground(isSelected ? Color.BLACK : new Color(100, 100, 100));
+                        setBorder(new EmptyBorder(0, 8, 0, 10));
+                        setFont(new Font("Consolas", Font.PLAIN, 11));
+                        setForeground(isSelected ? Color.BLACK : new Color(100, 116, 139));
                         setToolTipText(null);
                         break;
-                    case 4: // Password - show dots if present
+                    case 4: // Password - centered
                         setHorizontalAlignment(JLabel.CENTER);
+                        setBorder(new EmptyBorder(0, 6, 0, 6));
                         if (value != null && !value.toString().isEmpty()) {
                             setText("••••");
                             setToolTipText(BundleManager.getString("mainframe.table.tooltip.passwordSet"));
@@ -1038,15 +1049,16 @@ public class MainFrame extends JFrame {
                             setToolTipText(BundleManager.getString("mainframe.table.tooltip.noPassword"));
                         }
                         break;
-                    case 5: // Delete button - now column 5
+                    case 5: // Delete button
                         setHorizontalAlignment(JLabel.CENTER);
-                        // "sostituisci la X nella tabella con il simbolo del cestino"
+                        setBorder(new EmptyBorder(0, 4, 0, 6));
                         setIcon(new VectorIcon("trash", 16, DELETE_RED));
                         setText("");
-                        setToolTipText(null); // No tooltip requested
+                        setToolTipText(null);
                         break;
                     default:
                         setHorizontalAlignment(JLabel.LEFT);
+                        setBorder(new EmptyBorder(0, 8, 0, 8));
                         setToolTipText(null);
                 }
 
@@ -1460,6 +1472,11 @@ public class MainFrame extends JFrame {
             return;
         }
 
+        // VERIFICA E PROMEMORIA RISORSE RAM PRE-AVVIO
+        if (!checkPreflightResourceConfirmation()) {
+            return;
+        }
+
         // Open Monitor Dialog
         ExecutionMonitorDialog monitor = new ExecutionMonitorDialog(this);
         monitor.setLocationRelativeTo(this);
@@ -1560,6 +1577,83 @@ public class MainFrame extends JFrame {
                 Desktop.getDesktop().open(f);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Mostra un dialogo di riepilogo pre-volo che indica la RAM assegnata ad IPED
+     * e permette all'utente di modificarla al volo prima di avviare.
+     */
+    private boolean checkPreflightResourceConfirmation() {
+        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+        boolean showReminder = prefs.getBoolean("showPreflightRamReminder", true);
+        if (!showReminder) {
+            return true;
+        }
+
+        while (true) {
+            ProcessingOptions opts = getOpts();
+            int ramGB = opts.maxMemoryGB;
+
+            it.ipedmanager.service.SystemHardwareService.SystemSnapshot snap = 
+                    it.ipedmanager.service.SystemHardwareService.getInstance().captureSnapshot(null, null, false);
+            double totalSysGB = snap.totalPhysicalMemory / (1024.0 * 1024 * 1024);
+            java.text.DecimalFormat df1 = new java.text.DecimalFormat("#0.0");
+            String totalSysStr = totalSysGB > 0 ? (df1.format(totalSysGB) + " GB") : "--";
+
+            String profile = (String) profileCombo.getSelectedItem();
+            if (profile == null || profile.isEmpty()) profile = "Default";
+
+            JPanel panel = new JPanel(new BorderLayout(0, 14));
+            panel.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+
+            String htmlText = "<html><body style='font-family:Segoe UI, sans-serif; font-size:11px;'>"
+                    + "<div style='font-size:13px; font-weight:bold; color:#1E3A8A; margin-bottom:8px;'>"
+                    + "Riepilogo Risorse & Avvio Elaborazione"
+                    + "</div>"
+                    + "<table cellpadding='4' cellspacing='0' style='font-size:11px;'>"
+                    + "<tr><td><b>Memoria RAM Assegnata a IPED (-Xmx):</b></td><td><b style='color:#059669; font-size:12px;'>" + ramGB + " GB</b> <span style='color:#64748B;'>(su " + totalSysStr + " Totali PC)</span></td></tr>"
+                    + "<tr><td><b>Profilo Forense Selezionato:</b></td><td><b>" + profile + "</b></td></tr>"
+                    + "<tr><td><b>Numero Evidenze:</b></td><td>" + tableModel.getRowCount() + " elemento/i</td></tr>"
+                    + "<tr><td><b>Cartella Destinazione:</b></td><td><span style='color:#475569;'>" + (destinationPath.length() > 42 ? destinationPath.substring(0, 39) + "..." : destinationPath) + "</span></td></tr>"
+                    + "</table>"
+                    + "<div style='margin-top:10px; color:#64748B; font-size:10px;'>"
+                    + "<i>Per modificare la quantità di RAM assegnata a IPED, clicca su 'Modifica Impostazioni'.</i>"
+                    + "</div></body></html>";
+
+            JLabel infoLabel = new JLabel(htmlText);
+            infoLabel.setIcon(new it.ipedmanager.ui.config.VectorIcon("ram", 32, new Color(30, 58, 138)));
+            infoLabel.setIconTextGap(14);
+            panel.add(infoLabel, BorderLayout.CENTER);
+
+            JCheckBox chkDontShow = new JCheckBox("Non mostrare più questo riepilogo prima di avviare");
+            chkDontShow.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+            chkDontShow.setForeground(new Color(100, 116, 139));
+            panel.add(chkDontShow, BorderLayout.SOUTH);
+
+            Object[] options = new Object[]{"Avvia Elaborazione", "Modifica Impostazioni...", "Annulla"};
+            int choice = JOptionPane.showOptionDialog(
+                    this,
+                    panel,
+                    "Verifica Risorse IPED",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+            );
+
+            if (chkDontShow.isSelected()) {
+                prefs.putBoolean("showPreflightRamReminder", false);
+            }
+
+            if (choice == 0) {
+                return true;
+            } else if (choice == 1) {
+                it.ipedmanager.ui.config.ConfigManagerDialog.showDialog(this);
+            } else {
+                return false;
+            }
         }
     }
 

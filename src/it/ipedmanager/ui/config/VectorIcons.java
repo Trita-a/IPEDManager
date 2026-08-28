@@ -384,6 +384,21 @@ public class VectorIcons {
                 g2.draw(new Line2D.Double(12, 8, 12, 8.01));
                 break;
 
+            case "ram":
+            case "memory":
+                // Memory RAM stick icon (PCB with chips and bottom pins)
+                g2.draw(new RoundRectangle2D.Double(2, 6, 20, 11, 2, 2));
+                g2.fill(new Rectangle2D.Double(5, 8, 3, 5));
+                g2.fill(new Rectangle2D.Double(10.5, 8, 3, 5));
+                g2.fill(new Rectangle2D.Double(16, 8, 3, 5));
+                g2.draw(new Line2D.Double(4, 17, 4, 19));
+                g2.draw(new Line2D.Double(7, 17, 7, 19));
+                g2.draw(new Line2D.Double(10, 17, 10, 19));
+                g2.draw(new Line2D.Double(14, 17, 14, 19));
+                g2.draw(new Line2D.Double(17, 17, 17, 19));
+                g2.draw(new Line2D.Double(20, 17, 20, 19));
+                break;
+
             case "plus":
                 g2.draw(new Line2D.Double(12, 5, 12, 19));
                 g2.draw(new Line2D.Double(5, 12, 19, 12));

@@ -1,3 +1,21 @@
+# IPEDManager v1.2.1
+
+## 🐛 Correzioni Critiche & Miglioramenti (v1.2.1)
+- **Correzione Critica Allocazione RAM JVM (`-Xmx`)**:
+  - Risolto il posizionamento del parametro `-Xmx` nel comando generato da `IpedExecutor`. Il parametro di memoria viene ora passato **prima** di `-jar iped.jar` come opzione standard della JVM (`java.exe -Xmx48G -jar ...`).
+  - Questo garantisce che la Java Virtual Machine allochi realmente tutti i GB di memoria configurati dall'utente (es. 48 GB) invece di ignorare il parametro e ricadere sulla RAM minima di default.
+- **Nuovo Riepilogo Risorse Pre-Avvio**:
+  - Introdotto un popup informativo che precede l'avvio di ogni elaborazione, indicando la **RAM assegnata ad IPED** rispetto alla RAM totale del PC, il profilo forense e la cartella di output.
+  - Include un'azione rapida per aprire direttamente le Impostazioni e modificare la memoria al volo prima di procedere.
+- **Risoluzione Contrasto Titoli nei Dialoghi FlatLaf**:
+  - Risolto il contrasto dei titoli su tutte le finestre secondarie, popup e dialoghi chiari, eliminando la scritta bianca su sfondo chiaro e garantendo testo scuro nitido ad alta leggibilità.
+- **Miglioramento Spaziatura Tabella Evidenze**:
+  - Aumentata l'altezza delle righe della tabella a 28px con margini laterali calibrati per dare respiro visivo alle icone, ai nomi dei file e al pulsante di eliminazione.
+- **Nuova Icona Vettoriale RAM**:
+  - Aggiunto il rendering vettoriale del banco di memoria RAM nel componente `VectorIcons`.
+
+---
+
 # IPEDManager v1.2.0
 
 ## 🚀 Novità Principali (v1.2.0)

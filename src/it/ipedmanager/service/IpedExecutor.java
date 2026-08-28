@@ -126,14 +126,14 @@ public class IpedExecutor {
         // Java executable
         cmd.add(jrePath);
 
-        // JAR
-        cmd.add("-jar");
-        cmd.add(ipedJarPath);
-
-        // Memory options (MUST be after jar, as args to IPED wrapper)
+        // Memory options (MUST be BEFORE -jar as JVM arguments)
         if (options.maxMemoryGB > 0) {
             cmd.add("-Xmx" + options.maxMemoryGB + "G");
         }
+
+        // JAR
+        cmd.add("-jar");
+        cmd.add(ipedJarPath);
 
         // Evidenze
         for (Evidence ev : evidences) {
