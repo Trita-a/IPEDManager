@@ -1020,12 +1020,18 @@ public class MainFrame extends JFrame {
                             setToolTipText(name.length() > 20 ? name : null);
                         }
                         break;
-                    case 2: // Path - left aligned with padding
+                    case 2: // Path - left aligned with padding and dynamic width
                         setHorizontalAlignment(JLabel.LEFT);
                         setBorder(new EmptyBorder(0, 8, 0, 8));
                         if (value instanceof String) {
                             String path = (String) value;
-                            setText(smartShortenPath(path, 40));
+                            int colWidth = table.getColumnModel().getColumn(column).getWidth() - 20;
+                            FontMetrics fm = getFontMetrics(getFont());
+                            if (colWidth > 60 && fm != null && fm.stringWidth(path) > colWidth) {
+                                setText(smartShortenPathForWidth(path, fm, colWidth));
+                            } else {
+                                setText(path);
+                            }
                             setToolTipText("<html><b>" + BundleManager.getString("mainframe.table.tooltip.path")
                                     + "</b> " + path + "</html>");
                         }
@@ -1067,11 +1073,50 @@ public class MainFrame extends JFrame {
         };
         evidenceTable.setDefaultRenderer(Object.class, professionalRenderer);
 
-        // Professional table header
-        evidenceTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 11)); // Slightly larger (11)
-        evidenceTable.getTableHeader().setBackground(new Color(233, 236, 239)); // Darker gray (#E9ECEF)
-        evidenceTable.getTableHeader().setForeground(new Color(33, 37, 41)); // Dark text
-        evidenceTable.getTableHeader().setPreferredSize(new Dimension(0, 26)); // Slightly taller
+        // Professional table header matching column content alignment and padding
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                setFont(new Font("Segoe UI", Font.BOLD, 11));
+                setBackground(new Color(233, 236, 239)); // Gray (#E9ECEF)
+                setForeground(new Color(33, 37, 41)); // Dark text
+
+                switch (column) {
+                    case 0: // Icon column
+                        setHorizontalAlignment(JLabel.CENTER);
+                        setBorder(new EmptyBorder(0, 0, 0, 0));
+                        break;
+                    case 1: // Name - Left aligned with matching padding
+                        setHorizontalAlignment(JLabel.LEFT);
+                        setBorder(new EmptyBorder(0, 6, 0, 8));
+                        break;
+                    case 2: // Path - Left aligned with matching padding
+                        setHorizontalAlignment(JLabel.LEFT);
+                        setBorder(new EmptyBorder(0, 8, 0, 8));
+                        break;
+                    case 3: // Size - Right aligned with matching padding
+                        setHorizontalAlignment(JLabel.RIGHT);
+                        setBorder(new EmptyBorder(0, 8, 0, 10));
+                        break;
+                    case 4: // Password - Centered
+                        setHorizontalAlignment(JLabel.CENTER);
+                        setBorder(new EmptyBorder(0, 6, 0, 6));
+                        break;
+                    case 5: // Delete button
+                        setHorizontalAlignment(JLabel.CENTER);
+                        setBorder(new EmptyBorder(0, 0, 0, 0));
+                        break;
+                    default:
+                        setHorizontalAlignment(JLabel.LEFT);
+                        setBorder(new EmptyBorder(0, 8, 0, 8));
+                }
+                return this;
+            }
+        };
+        evidenceTable.getTableHeader().setDefaultRenderer(headerRenderer);
+        evidenceTable.getTableHeader().setPreferredSize(new Dimension(0, 28)); // Matching 28px height
         evidenceTable.getTableHeader().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
         evidenceTable.getTableHeader().setReorderingAllowed(false);
 
@@ -1734,6 +1779,22 @@ public class MainFrame extends JFrame {
             endLen = 5; // Minimum end
 
         return path.substring(0, startLen) + "..." + path.substring(path.length() - endLen);
+    }
+
+    private String smartShortenPathForWidth(String path, FontMetrics fm, int targetWidth) {
+        if (path == null || fm == null || fm.stringWidth(path) <= targetWidth) {
+            return path != null ? path : "";
+        }
+        int len = path.length();
+        int minEnd = 6;
+        int maxEnd = len - 4;
+        for (int endLen = maxEnd; endLen >= minEnd; endLen--) {
+            String candidate = path.substring(0, 3) + "..." + path.substring(len - endLen);
+            if (fm.stringWidth(candidate) <= targetWidth) {
+                return candidate;
+            }
+        }
+        return path.substring(0, 3) + "..." + path.substring(Math.max(3, len - minEnd));
     }
 
     private void setupDragDrop() {
