@@ -219,7 +219,7 @@ public class ConfigManagerDialog extends JDialog {
         title.setFont(new Font("Segoe UI", Font.BOLD, 18));
         title.setForeground(Color.WHITE);
 
-        JLabel subtitle = new JLabel("Indexador e Processador de Evidencias Digitais");
+        JLabel subtitle = new JLabel(BundleManager.getString("header.subtitle"));
         subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         subtitle.setForeground(new Color(200, 200, 200)); // Light Gray on Navy
 
