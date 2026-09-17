@@ -1,3 +1,11 @@
+# IPEDManager v1.2.2
+
+## 🐛 Correzioni Critiche (v1.2.2)
+- **Fix Allocazione RAM JVM per IPED >= 4.0**:
+  - Il parametro `-Xmx` per l'allocazione della RAM è stato riposizionato **dopo** `-jar iped.jar`. Le versioni più recenti di IPED elaborano i task in un processo separato (fork) ed esigono che i parametri di memoria vengano passati esplicitamente come argomenti del comando per poterli applicare al nuovo processo.
+
+---
+
 # IPEDManager v1.2.1
 
 ## 🐛 Correzioni Critiche & Miglioramenti (v1.2.1)
